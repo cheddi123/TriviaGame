@@ -1,11 +1,15 @@
 
 
-
+var count = 0;
+var countDown = 10;
+var isCountDownEnded = false;
+var resetTime;
+var choices
 
 var Trivia = [
     {
         q: "Which country won the last FIFA world cup?",
-        a: " France",
+        a: "France",
         answerChoices: ["England", "Belgium", "France", "Brazil"],
     },
     {
@@ -36,26 +40,107 @@ var Trivia = [
 
 ]
 
-for(var i=0;i<Trivia.length;i++){
-    console.log(Trivia[i].q);
-    console.log(Trivia[i].answerChoices);
-   var questions = $("<h3>");
+// create function to display questions and answer choices
+function display(count) {
+    //   console.log(Trivia[count].answerChoices);
+    console.log(Trivia[count].q);
+    
+    var questions = $("<h3>");
+    questions.text(Trivia[count].q);
+    $("#questions ").append(questions);
+    for (var j = 0; j < Trivia[count].answerChoices.length; j++) {
+      choices = $("<button>").text(Trivia[count].answerChoices[j]);
+        $("#choices").append(choices);
+        console.log(Trivia[count].answerChoices[j])
    
-    questions.text(Trivia[i].q);
-$(".questions div").append(questions);
+    }      
+   $("#choices button").on("click",function(){
+        console.log($(this).text());
+        console.log(Trivia[count].a);
 
-
-for(var j=0;j<Trivia[i].answerChoices.length;j++){
-    var choices =$("<span>").text(Trivia[j].answerChoices[j]);
-    var input =$('<input type="radio" name="radio_name">')
-   
-    $(".questions div").append(input,choices);
-}
-
+          var x = Trivia[count].a; 
+          var y = $(this).text();
+        if(x ===y){
+        console.log("you are a winner");
+        $("#questions ").empty();
+        $("#choices").empty();
+          setTimeout(nextQuestion,2000);  
+         }  
+    
+})
     
 }
 
 
+ 
+// reset time
+function reset(){
+    countDown=10;   
+}
+
+// decrement function to countdown time 
+function decrement() {
+   
+    if (!isCountDownEnded) {
+        countDown--
+        $("#countDown").text(countDown)
+        if(countDown===0){ 
+         count++;
+         isCountDownEnded=true
+   
+        }
+    
+        //  setInterval ( nextQuestion,5000);
+    }
+
+}
+
+function start(){
+       display(count);
+        if(!isCountDownEnded){
+        setInterval(decrement, 1000);
+
+       
+       } 
+    
+}
+
+// start the game by clicking start button
+$(".button").click(start) 
+
+
+// function to display next question
+var nextQuestion= function() {
+       count++;
+        reset();
+        display(count);      
+        
+    }
+
+   
+
+
+
+
+
+
+// for(var i=0;i<Trivia.length;i++){
+
+//    var questions = $("<h3>");
+
+//     questions.text(Trivia[i].q);
+// $(".questions div").append(questions);
+
+
+// for(var j=0;j<Trivia[i].answerChoices.length;j++){
+//     var choices =$("<span>").text(Trivia[j].answerChoices[j]);
+//     var input =$('<input type="radio" name="radio_name">')
+
+//     $(".questions div").append(input,choices);
+// }
+
+
+// }
 
 
 
@@ -75,4 +160,4 @@ for(var j=0;j<Trivia[i].answerChoices.length;j++){
 // {q4: ["Cowboys","Packers","Eagles","Panthers"]},
 // {q5: ["3600","365","5000","860"]}
 
-// ]
+// 
