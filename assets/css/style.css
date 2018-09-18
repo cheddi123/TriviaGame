@@ -1,3 +1,7 @@
-.questions{
-    background-color: aqua;
+body{
+    background-color: rgb(123, 129, 129);
+}
+
+#questions{
+    color: aliceblue;
 }
