@@ -1,7 +1,15 @@
 body{
-    background-color: rgb(123, 129, 129);
+    background-image: url(https://steamcdn-a.akamaihd.net/steamcommunity/public/images/items/628570/cab100e735ec37d9feeb5ef25c06ba2a55fe9388.jpg)
 }
 
 #questions{
     color: aliceblue;
 }
+
+.results{
+    color: aliceblue;
+}
+
+/* #choices:hover{
+   background-color: blue;
+} */

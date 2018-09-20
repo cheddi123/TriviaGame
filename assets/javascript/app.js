@@ -4,8 +4,14 @@ var count = 0;
 var countDown = 10;
 var isCountDownEnded = false;
 var resetTime;
-var choices
+var choices;
+var numCorrect=0;
+var numWrong =0;
+var numUnanswered=0;
+// variable to keep tract of the number of  questions
 var totalQuestions = 0;
+var clickStart=false;
+var gameEnded =false;
 
 var Trivia = [
     {
@@ -41,8 +47,12 @@ var Trivia = [
 
 ]
 
+var InterValid ;
 // create function to display questions and answer choices
 function display(count) {
+    totalQuestions++;
+   
+
     //   console.log(Trivia[count].answerChoices);
     console.log(Trivia[count].q);
 
@@ -51,12 +61,18 @@ function display(count) {
     $("#questions ").append(questions);
     for (var j = 0; j < Trivia[count].answerChoices.length; j++) {
         choices = $("<button>").text(Trivia[count].answerChoices[j]);
+        choices.css("background", "blue");
+        // choices.hover("background", "yellow")
+
         $("#choices").append(choices);
         console.log(Trivia[count].answerChoices[j])
 
     }
-
-    $("#choices button").on("click", function () {
+    // finishGame(totalQuestions);
+    // start the countdown when you click the start button
+     InterValid =  setInterval(decrement, 1000);
+     
+    $("#choices button ").on("click", function () {
         console.log($(this).text());
         console.log(Trivia[count].a);
 
@@ -65,67 +81,84 @@ function display(count) {
         var y = $(this).text();
         if ((countDown !== 0) || (countDown > 0)) {
             if (x === y) {
+                numCorrect++;
                 console.log("you are a winner");
                 $("#outcome").append("Congratulations , You got it right");
 
                 $("#questions ").empty();
                 $("#choices").empty();
-                reset();
-                setTimeout(nextQuestion, 2000);
+               resetTime();
+                clearInterval(InterValid);
+              if(totalQuestions===Trivia.length){
+                  finishGame(totalQuestions);
+              }
+              else{  setTimeout(nextQuestion, 2000);}
+                
+
             }
             if (x !== y) {
+                numWrong++;
                 $("#outcome").append("Sorry, you got it worng. The correct anwser is " + x);
                 $("#questions ").empty();
                 $("#choices").empty();
-                reset();
-                setTimeout(nextQuestion, 2000);
+                   resetTime();
+                clearInterval(InterValid);
+                if(totalQuestions===Trivia.length){
+                    finishGame(totalQuestions);
+                }
+                else{  setTimeout(nextQuestion, 2000);}
+                
             }
 
         }
-
+       
     })
 
 }
 
 
 
+
 // reset time
-function reset() {
+function resetTime() {
     countDown = 10;
+    
+    $("#countDown").text(countDown);
 }
 
 // decrement function to countdown time 
 function decrement() {
-
+       countDown--;
     if (!isCountDownEnded) {
-        countDown--
-        $("#countDown").text(countDown)
-        if (countDown === 0) {
-            //  count++;
+       
+
+        $("#countDown").text(countDown);
+        if  (countDown===0) {
+            numUnanswered++
             $("#outcome").append(" Out of Time. The correct anwser is " + Trivia[count].a);
             $("#questions ").empty();
             $("#choices").empty();
-            reset();
-            setTimeout(nextQuestion, 2000);
+               clearInterval(InterValid);
+                resetTime();
+                if(totalQuestions===Trivia.length){
+                    finishGame(totalQuestions);
+                }
+                else{  setTimeout(nextQuestion, 2000);}  
 
-        }
-
+        } 
 
     }
-    // if(totalQuestions===Trivia.length){
-    //     $("#outcome").append(" You have come to the end. There are no more questions")
-    //     isCountDownEnded=true
-    // }
 
 }
 
+
 function start() {
+    if(!clickStart){
     display(count);
-    if (!isCountDownEnded) {
-        setInterval(decrement, 1000);
-
-    }
-
+   
+    clickStart=true;
+   }
+    
 }
 
 // start the game by clicking start button
@@ -133,16 +166,36 @@ $(".button").click(start)
 
 
 // function to display next question
-var nextQuestion = function () {
+function nextQuestion() {
     count++;
-    totalQuestions++
-    reset();
-    display(count);
-    $("#outcome").empty();
    
-
+//    finishGame(totalQuestions);
+    display(count);       
+    $("#outcome").empty();
 
 }
+
+function finishGame (totalQuestions){
+      var results =$("<h3>").append("Correct :  "+ numCorrect);
+      var incorrect = $("<h3>").append("Incorrect :  "+ numWrong);
+      var unattemped =$("<h3>").append("Unanswered :  "+ numUnanswered);
+      results.append(incorrect,unattemped);
+      
+    console.log(totalQuestions);
+    console.log(Trivia.length);
+    if(!gameEnded){
+    if(totalQuestions===Trivia.length){ 
+        console.log("game ended")
+        clearInterval(InterValid);
+       
+       $(".results").append(results);
+        gameEnded;
+    }
+    }
+}
+
+
+
 
 
 
