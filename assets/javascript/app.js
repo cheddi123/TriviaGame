@@ -206,7 +206,7 @@ function finishGame(totalQuestions) {
         if (totalQuestions === Trivia.length) {
             console.log("game ended")
             clearInterval(InterValid);
-            $("#outcome").append(endOfGame);
+            $("#gameOver").append(endOfGame);
             $(".results").append(results);
             gameEnded;
         }
